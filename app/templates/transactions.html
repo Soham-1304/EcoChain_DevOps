@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">Transaction History</h2>
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Counterparty</th>
+            <th>Credit Type</th>
+            <th>Quantity (tCO2e)</th>
+            <th>Total (USD)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tx in tx_list %}
+        <tr>
+            <td>{{ tx.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>
+                {% if tx.buyer_id == current_user.id %}
+                    <span class="badge bg-primary">Purchase</span>
+                {% else %}
+                    <span class="badge bg-secondary">Sale</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if tx.buyer_id == current_user.id %}
+                    {{ tx.seller.organization }}
+                {% else %}
+                    {{ tx.buyer.organization }}
+                {% endif %}
+            </td>
+            <td>{{ tx.credit_type }}</td>
+            <td>{{ tx.quantity }}</td>
+            <td>${{ "%.2f"|format(tx.total_price) }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center text-muted">No transactions recorded yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

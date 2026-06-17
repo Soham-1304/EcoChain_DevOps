@@ -1,0 +1,19 @@
+# ---------------------------------------------------------------------------
+# Service - exposes the EcoChain app inside the cluster
+# ---------------------------------------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: ecochain-service
+  namespace: ecochain
+  labels:
+    app: ecochain-app
+spec:
+  type: ClusterIP
+  selector:
+    app: ecochain-app
+  ports:
+    - port: 80
+      targetPort: 5000
+      protocol: TCP
+      name: http

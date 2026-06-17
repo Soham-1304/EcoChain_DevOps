@@ -1,0 +1,29 @@
+flowchart TB
+    INTERNET[Internet]
+
+    subgraph AWS["AWS Cloud Region - ap-south-1"]
+        subgraph VPC["VPC 10.0.0.0/16"]
+            subgraph PUB["Public Subnets"]
+                IGW[Internet Gateway]
+                NAT[NAT Gateway]
+            end
+            subgraph PRIV["Private Subnets"]
+                subgraph EKSC["EKS Managed Node Group"]
+                    P1[App Pods]
+                end
+                RDS[(RDS PostgreSQL)]
+            end
+        end
+        ECR[ECR Image Repository]
+    end
+
+    INTERNET --> IGW
+    IGW --> PUB
+    NAT --> PRIV
+    P1 --> RDS
+    P1 -- pulls image --> ECR
+    IGW -.routes traffic.-> P1
+
+    style PUB fill:#e3f2fd,stroke:#1565c0
+    style PRIV fill:#e8f5e9,stroke:#2d6a4f
+    style AWS fill:#fafafa,stroke:#616161

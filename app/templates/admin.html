@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">Compliance &amp; Audit Console</h2>
+
+<h4>Registered Organizations</h4>
+<table class="table table-sm table-bordered mb-5">
+    <thead class="table-dark">
+        <tr><th>ID</th><th>Username</th><th>Organization</th><th>Role</th><th>Carbon Balance (tCO2e)</th><th>Joined</th></tr>
+    </thead>
+    <tbody>
+        {% for user in all_users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.organization }}</td>
+            <td>{{ user.role }}</td>
+            <td>{{ "%.2f"|format(user.carbon_balance) }}</td>
+            <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h4>All Platform Transactions (Audit Trail)</h4>
+<table class="table table-sm table-bordered">
+    <thead class="table-dark">
+        <tr><th>ID</th><th>Date</th><th>Buyer</th><th>Seller</th><th>Credit Type</th><th>Quantity</th><th>Total (USD)</th></tr>
+    </thead>
+    <tbody>
+        {% for tx in all_tx %}
+        <tr>
+            <td>{{ tx.id }}</td>
+            <td>{{ tx.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>{{ tx.buyer.organization }}</td>
+            <td>{{ tx.seller.organization }}</td>
+            <td>{{ tx.credit_type }}</td>
+            <td>{{ tx.quantity }}</td>
+            <td>${{ "%.2f"|format(tx.total_price) }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="text-center text-muted">No transactions recorded yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

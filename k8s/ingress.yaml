@@ -1,0 +1,25 @@
+# ---------------------------------------------------------------------------
+# Ingress - external HTTP access to the EcoChain app
+# Requires an ingress controller (e.g., nginx-ingress) installed in the cluster
+# ---------------------------------------------------------------------------
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ecochain-ingress
+  namespace: ecochain
+  annotations:
+    nginx.ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: ecochain.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ecochain-service
+                port:
+                  number: 80

@@ -1,0 +1,19 @@
+flowchart TB
+    DEV[Developer Pushes Code to GitHub] --> JEN[Jenkins Pipeline Triggered]
+
+    subgraph PIPE["Jenkins CI/CD Pipeline Stages"]
+        direction TB
+        S1[1. Checkout Source Code]
+        S2[2. Install Dependencies and Run Tests]
+        S3[3. Build Docker Image]
+        S4[4. Push Image to Registry - ECR or Docker Hub]
+        S5[5. Deploy to Kubernetes - kubectl apply]
+        S1 --> S2 --> S3 --> S4 --> S5
+    end
+
+    JEN --> S1
+    S5 --> K8S[EKS Cluster Updated with New Version]
+    K8S --> MON[Prometheus and Grafana Monitor New Pods]
+    K8S --> LOG[ELK Stack Collects Application Logs]
+
+    style PIPE fill:#fff3e0,stroke:#ef6c00

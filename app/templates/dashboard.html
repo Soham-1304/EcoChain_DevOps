@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">Welcome, {{ current_user.organization }}</h2>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-bg-success shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">Your Carbon Credit Balance</h6>
+                <h2>{{ "%.2f"|format(current_user.carbon_balance) }} tCO2e</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-light shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">Active Marketplace Listings</h6>
+                <h2>{{ active_listings }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-light shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">Total Platform Credits Traded</h6>
+                <h2>{{ "%.2f"|format(total_credits_traded) }} tCO2e</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4>Recent Activity</h4>
+<table class="table table-striped">
+    <thead>
+        <tr><th>Date</th><th>Type</th><th>Credit Type</th><th>Quantity (tCO2e)</th><th>Total (USD)</th></tr>
+    </thead>
+    <tbody>
+        {% for tx in recent_tx %}
+        <tr>
+            <td>{{ tx.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>{{ "Purchase" if tx.buyer_id == current_user.id else "Sale" }}</td>
+            <td>{{ tx.credit_type }}</td>
+            <td>{{ tx.quantity }}</td>
+            <td>${{ "%.2f"|format(tx.total_price) }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="text-center text-muted">No transactions yet. Visit the Marketplace to get started.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

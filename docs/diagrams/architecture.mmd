@@ -1,0 +1,76 @@
+---
+config:
+  layout: elk
+---
+
+flowchart TB
+    %% Define subgraphs
+    subgraph USERS["fa:fa-users Platform Users"]
+        class USERS users;
+        U1["fa:fa-landmark Government Agencies"]
+        U2["fa:fa-building Corporations"]
+        U3["fa:fa-leaf Sustainability Organizations"]
+        class U1,U2,U3 usernode;
+    end
+
+    U1 --> ING
+    U2 --> ING
+    U3 --> ING
+
+    ING["fa:fa-network-wired Ingress / Load Balancer"]
+
+    subgraph EKS["fa:fa-dharmachakra Kubernetes Cluster (EKS)"]
+        class EKS eks;
+        ING --> APP1["fa:fa-docker EcoChain App Pod 1 (Containerized)"]
+        ING --> APP2["fa:fa-docker EcoChain App Pod 2 (Containerized)"]
+        HPA["fa:fa-sliders Horizontal Pod Autoscaler"]
+
+        subgraph POD1["fa:fa-docker App Pod 1 Layers"]
+            class POD1 podlayer;
+            C1["fa:fa-cube Base Image"]
+            C2["fa:fa-cubes App Container"]
+            C3["fa:fa-shield Security Sidecar"]
+            C1 --> C2 --> C3
+        end
+
+        subgraph POD2["fa:fa-docker App Pod 2 Layers"]
+            class POD2 podlayer;
+            D1["fa:fa-cube Base Image"]
+            D2["fa:fa-cubes App Container"]
+            D3["fa:fa-shield Security Sidecar"]
+            D1 --> D2 --> D3
+        end
+
+        HPA -.controls.-> APP1
+        HPA -.controls.-> APP2
+        class ING,APP1,APP2,HPA appnode;
+    end
+
+    APP1 --> DB["fa:fa-database PostgreSQL Database"]
+    APP2 --> DB
+    APP1 --> VAULT["fa:fa-lock HashiCorp Vault"]
+    APP2 --> VAULT
+
+    APP1 -- metrics --> PROM["fa:fa-chart-line Prometheus"]
+    APP2 -- metrics --> PROM
+    PROM --> GRAF["fa:fa-chart-pie Grafana Dashboards"]
+
+    APP1 -- logs --> FB["fa:fa-file-lines Filebeat"]
+    APP2 -- logs --> FB
+    FB --> LS["fa:fa-cogs Logstash"]
+    LS --> ES["fa:fa-search Elasticsearch"]
+    ES --> KIB["fa:fa-eye Kibana"]
+
+    %% Styling classes
+    classDef users stroke:#558b2f,fill:#f1f8e9,color:#1b5e20,font-weight:bold;
+    classDef usernode stroke:#7cb342,fill:#f9fbe7;
+    classDef eks stroke:#2d6a4f,fill:#e8f5e9,color:#1b4332,font-weight:bold;
+    classDef appnode stroke:#4caf50,fill:#f0fdf4;
+    classDef podlayer stroke:#26c6da,fill:#e0f7fa,color:#006064;
+    classDef db stroke:#1565c0,fill:#e3f2fd;
+    classDef monitor stroke:#6a1b9a,fill:#f3e5f5;
+    classDef logging stroke:#ad1457,fill:#fce4ec;
+
+    class DB db;
+    class PROM,GRAF monitor;
+    class FB,LS,ES,KIB logging;

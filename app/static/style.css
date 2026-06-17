@@ -1,0 +1,13 @@
+body {
+    background-color: #f4f6f5;
+}
+.navbar-brand {
+    letter-spacing: 0.5px;
+}
+.card {
+    border: none;
+    border-radius: 10px;
+}
+table thead {
+    background-color: #2d6a4f;
+}

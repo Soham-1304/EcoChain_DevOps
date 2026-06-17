@@ -1,0 +1,29 @@
+# ---------------------------------------------------------------------------
+# Filebeat configuration - collects logs from the ecochain-app container
+# and forwards them to Logstash for processing
+# ---------------------------------------------------------------------------
+
+filebeat.inputs:
+  - type: container
+    paths:
+      - '/var/lib/docker/containers/*/*.log'
+    processors:
+      - add_docker_metadata:
+          host: "unix:///var/run/docker.sock"
+      - decode_json_fields:
+          fields: ["message"]
+          target: ""
+          overwrite_keys: true
+
+# Only ship logs from the ecochain-app container
+processors:
+  - drop_event:
+      when:
+        not:
+          contains:
+            container.name: "ecochain-app"
+
+output.logstash:
+  hosts: ["logstash:5044"]
+
+logging.level: info

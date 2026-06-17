@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">Carbon Credit Marketplace</h2>
+
+<div class="table-responsive">
+<table class="table table-hover align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>Seller</th>
+            <th>Credit Type</th>
+            <th>Quantity (tCO2e)</th>
+            <th>Price / Credit (USD)</th>
+            <th>Total (USD)</th>
+            <th>Listed On</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for listing in listings %}
+        <tr>
+            <td>{{ listing.seller.organization }}</td>
+            <td><span class="badge bg-success">{{ listing.credit_type }}</span></td>
+            <td>{{ listing.quantity }}</td>
+            <td>${{ "%.2f"|format(listing.price_per_credit) }}</td>
+            <td>${{ "%.2f"|format(listing.quantity * listing.price_per_credit) }}</td>
+            <td>{{ listing.created_at.strftime('%Y-%m-%d') }}</td>
+            <td>
+                {% if listing.seller_id != current_user.id %}
+                <form method="POST" action="{{ url_for('buy_listing', listing_id=listing.id) }}">
+                    <button type="submit" class="btn btn-sm btn-success">Buy</button>
+                </form>
+                {% else %}
+                <span class="text-muted">Your listing</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="text-center text-muted">No active listings. Create one from "Sell Credits".</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

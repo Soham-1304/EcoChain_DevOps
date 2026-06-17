@@ -1,0 +1,32 @@
+# ---------------------------------------------------------------------------
+# Prometheus configuration - scrapes metrics from the EcoChain application
+# ---------------------------------------------------------------------------
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  # Prometheus' own metrics
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # EcoChain Flask application (exposed via prometheus-flask-exporter)
+  - job_name: "ecochain-app"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["ecochain-app:5000"]
+        labels:
+          environment: "production"
+          service: "ecochain-exchange"
+
+  # --- For Kubernetes deployments, use service discovery instead: -----------
+  # - job_name: "ecochain-app-k8s"
+  #   kubernetes_sd_configs:
+  #     - role: pod
+  #       namespaces:
+  #         names: ["ecochain"]
+  #   relabel_configs:
+  #     - source_labels: [__meta_kubernetes_pod_label_app]
+  #       action: keep
+  #       regex: ecochain-app

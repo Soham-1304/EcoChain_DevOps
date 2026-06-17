@@ -1,0 +1,8 @@
+# Copy this file to terraform.tfvars and fill in real values.
+# NEVER commit terraform.tfvars with real secrets to GitHub.
+
+aws_region   = "ap-south-1"
+project_name = "ecochain"
+
+db_username = "ecochain"
+db_password = "ChangeMe_StrongPassword123!"
