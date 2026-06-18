@@ -17,7 +17,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME   = "yourdockerhubuser/ecochain-app"
+        IMAGE_NAME   = "redpanda1304/ecochain-app"
         IMAGE_TAG    = "${env.BUILD_NUMBER}"
         K8S_NAMESPACE = "ecochain"
     }

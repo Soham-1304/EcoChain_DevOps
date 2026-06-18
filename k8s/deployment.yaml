@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: ecochain-app
-          image: yourdockerhubuser/ecochain-app:latest
+          image: redpanda1304/ecochain-app:latest
           ports:
             - containerPort: 5000
           envFrom:
