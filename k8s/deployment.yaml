@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: ecochain-app
-          image: redpanda1304/ecochain-app:latest
+          image: 636704811196.dkr.ecr.eu-north-1.amazonaws.com/ecochain-app
           ports:
             - containerPort: 5000
           envFrom:
