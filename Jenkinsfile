@@ -31,7 +31,7 @@ pipeline {
             steps {
                 dir('app') {
                     sh '''
-                        python3 -m venv venv
+                        python3.13 -m venv venv
                         . venv/bin/activate
                         pip install --upgrade pip -q
                         pip install -r requirements.txt -q
